@@ -7,13 +7,21 @@ import numpy as np
 
 app = FastAPI()
 
+from fastapi.middleware.cors import CORSMiddleware
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_methods=["POST"],
+    allow_credentials=True,
+    allow_methods=["*"],
     allow_headers=["*"],
 )
+from fastapi import Response
 
+@app.options("/{path:path}")
+def options_handler(path: str):
+    return Response()
+    
 from pathlib import Path
 
 data_file = Path(__file__).parent.parent / "q-vercel-latency.json"
