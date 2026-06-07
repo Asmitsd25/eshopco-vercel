@@ -14,13 +14,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-with open("q-vercel-latency.json") as f:
+from pathlib import Path
+
+data_file = Path(__file__).parent.parent / "q-vercel-latency.json"
+
+with open(data_file, "r") as f:
     DATA = json.load(f)
 
 class RequestBody(BaseModel):
     regions: List[str]
     threshold_ms: float
-
+    
+@app.get("/")
+def health():
+    return {"status": "ok"}
+    
 @app.post("/")
 def calculate_metrics(req: RequestBody):
 
